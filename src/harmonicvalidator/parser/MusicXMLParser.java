@@ -20,13 +20,14 @@ public class MusicXMLParser {
         builder = factory.newDocumentBuilder();
     }
 
-    public void parse(String file) throws IOException, SAXException
+    public List<Measure> parse(String file) throws IOException, SAXException
     {
         Document document = builder.parse(new File(file));
         document.getDocumentElement().normalize();
 
         List<Measure> measures = parseMeasures(document);
-        System.out.println(measures.get(1).getNotes().get(0).getName());
+
+        return measures;
     }
 
     private List<Measure> parseMeasures(Document document)
@@ -84,7 +85,7 @@ public class MusicXMLParser {
 
             String name = pitchData.getElementsByTagName("step").item(0).getTextContent();
             int octave = Integer.parseInt(pitchData.getElementsByTagName("octave").item(0).getTextContent());
-            double duration = Double.parseDouble(node.getElementsByTagName("duration").item(0).getTextContent());
+            int duration = Integer.parseInt(node.getElementsByTagName("duration").item(0).getTextContent());
 
             notes.add(new Note(name, octave, duration));
         }
