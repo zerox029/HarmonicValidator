@@ -65,8 +65,7 @@ public class MusicXMLParser {
                 key = measures.get(i - 1).getKey();
             }
 
-            List<Note> notes = parseNotes(node.getElementsByTagName("note"));
-
+            List<Note>[] notes = parseNotes(node.getElementsByTagName("note"));
 
             measures.add(new Measure(time, key, notes));
         }
@@ -74,9 +73,10 @@ public class MusicXMLParser {
         return measures;
     }
 
-    private List<Note> parseNotes(NodeList noteNodes)
+    private List<Note>[] parseNotes(NodeList noteNodes)
     {
-        List<Note> notes = new ArrayList<>();
+        List<Note> topStaff = new ArrayList<>();
+        List<Note> bottomStaff = new ArrayList<>();
 
         for(int i = 0; i < noteNodes.getLength(); i++)
         {
@@ -86,10 +86,19 @@ public class MusicXMLParser {
             String name = pitchData.getElementsByTagName("step").item(0).getTextContent();
             int octave = Integer.parseInt(pitchData.getElementsByTagName("octave").item(0).getTextContent());
             int duration = Integer.parseInt(node.getElementsByTagName("duration").item(0).getTextContent());
+            String staff = node.getElementsByTagName("staff").item(0).getTextContent();
+            boolean chord = node.getElementsByTagName("chord").getLength() > 0;
 
-            notes.add(new Note(name, octave, duration));
+            if(staff.equals("1"))
+                topStaff.add(new Note(name, octave, duration, chord));
+            else
+                bottomStaff.add(new Note(name, octave, duration, chord));
         }
 
-        return notes;
+        List<Note>[] staves = new List[2];
+        staves[0] = topStaff;
+        staves[1] = bottomStaff;
+        return staves;
     }
+
 }

@@ -2,6 +2,7 @@ package harmonicvalidator.analyzer;
 
 import harmonicvalidator.analyzer.rules.TestSuite;
 import harmonicvalidator.parser.MusicXMLParser;
+import harmonicvalidator.parser.NoteOrdering;
 import harmonicvalidator.parser.nodes.Measure;
 import harmonicvalidator.parser.nodes.Note;
 import harmonicvalidator.utils.VoiceType;
@@ -21,7 +22,18 @@ public class Validator
         {
             AssignVoiceTypes(measures.get(i));
 
-            for(Note note : measures.get(i).getNotes())
+            for(Note note : measures.get(i).getNotes()[0])
+            {
+                if(!TestSuite.runSuite(note))
+                {
+                    System.out.println("No good lulz. On note ");
+                }
+                else
+                {
+                    System.out.println("All good");
+                }
+            }
+            for(Note note : measures.get(i).getNotes()[1])
             {
                 if(!TestSuite.runSuite(note))
                 {
@@ -45,7 +57,7 @@ public class Validator
     private void AssignVoiceTypes(Measure measure)
     {
         int counter = 0;
-        for(Note note : measure.getNotes())
+        for(Note note : NoteOrdering.bottomUp(measure))
         {
             if(counter >= 4)
                 counter = 0;
@@ -53,16 +65,16 @@ public class Validator
             switch (counter)
             {
                 case 0:
-                    note.setVoiceType(VoiceType.TENOR);
+                    note.setVoiceType(VoiceType.BASS);
                     break;
                 case 1:
-                    note.setVoiceType(VoiceType.ALTO);
+                    note.setVoiceType(VoiceType.TENOR);
                     break;
                 case 2:
-                    note.setVoiceType(VoiceType.SOPRANO);
+                    note.setVoiceType(VoiceType.ALTO);
                     break;
                 case 3:
-                    note.setVoiceType(VoiceType.BASS);
+                    note.setVoiceType(VoiceType.SOPRANO);
                     break;
             }
 
