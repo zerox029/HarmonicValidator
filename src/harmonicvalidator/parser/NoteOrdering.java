@@ -5,21 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteOrdering {
-    public static List<Note> bottomUp(Measure measure)
+    public static List<Note> bottomUp(List<Measure> measures)
     {
         List<Note> notes = new ArrayList<>();
 
-        //Add top staff notes
-        int topStaffNoteCount = 0;
-        for(Note note : measure.getNotes()[1])
+        for(int i = 0; i < measures.size(); i++)
         {
-            notes.add(note);
+            Measure currentMeasureNotes = measures.get(i);
 
-            do
+            //Add top staff notes
+            int topStaffNoteCount = 0;
+            for(Note note : currentMeasureNotes.getNotes()[1])
             {
-                notes.add(measure.getNotes()[0].get(topStaffNoteCount));
-                topStaffNoteCount++;
-            } while (measure.getNotes()[0].size() > topStaffNoteCount && measure.getNotes()[0].get(topStaffNoteCount).isChord());
+                notes.add(note);
+
+                do
+                {
+                    notes.add(currentMeasureNotes.getNotes()[0].get(topStaffNoteCount));
+                    topStaffNoteCount++;
+                } while (currentMeasureNotes.getNotes()[0].get(topStaffNoteCount).isChord());
+            }
         }
 
         return notes;

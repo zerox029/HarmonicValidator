@@ -1,9 +1,7 @@
-package harmonicvalidator.analyzer.rules;
+package harmonicvalidator.tests;
 
 import harmonicvalidator.parser.nodes.Note;
 import harmonicvalidator.utils.VoiceType;
-
-import java.util.Dictionary;
 import java.util.HashMap;
 
 public class VoiceRange {
